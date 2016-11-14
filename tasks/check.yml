@@ -5,6 +5,7 @@
     module: stat 
     path: "{{playbook_dir}}/{{access_file_name}}"
   register: pem_file_stat
+  become: false
   ignore_errors: True
   tags: check
 
