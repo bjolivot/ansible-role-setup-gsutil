@@ -1,0 +1,13 @@
+---
+
+- name: check json access file is present
+  local_action: 
+    module: stat 
+    path: "{{playbook_dir}}/{{access_file_name}}"
+  register: pem_file_stat
+  ignore_errors: True
+  tags: check
+
+- fail: msg="Pem file {{ access_file_name }} not found in playbook directory"
+  when: pem_file_stat.stat.exists == false
+  tags: check

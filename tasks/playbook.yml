@@ -1,0 +1,33 @@
+---
+# here comes the real playbook, executed after env check
+# - name: add google apt-key 
+#   apt-key: url="https://packages.cloud.google.com/apt/doc/apt-key.gpg" state=present
+
+- name: add google apt key
+  apt_key: url="https://packages.cloud.google.com/apt/doc/apt-key.gpg" state=present
+
+
+- name: get release name
+  shell: "echo cloud-sdk-$(lsb_release -c -s)"
+  register: distrib_name
+  changed_when: 1==2
+
+- name: Add repository
+  apt_repository: 
+    repo: "deb https://packages.cloud.google.com/apt {{ distrib_name.stdout }} main" 
+    update_cache: true
+    state: present
+
+- name: install gsutil
+  apt:
+    pkg: google-cloud-sdk
+    state: present
+
+- name: copy service account in /tmp
+  copy: 
+    src: "{{playbook_dir}}/{{access_file_name}}" 
+    dest: "/tmp/{{access_file_name}}"
+
+- name: init with service account json
+  shell: gcloud auth activate-service-account --key-file /tmp/{{access_file_name}}
+

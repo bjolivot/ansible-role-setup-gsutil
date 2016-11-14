@@ -1,0 +1,8 @@
+---
+#here comes default vars for your role
+#
+# #myvar is used to do something great
+# myvar: value
+#
+
+access_file_name: service_account.json
